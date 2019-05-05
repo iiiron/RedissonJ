@@ -1,4 +1,4 @@
-package net.noboard.redissonJ.redissonvisitcontroller;
+package net.noboard.redissonJ;
 
 public class RedissonJException extends RuntimeException {
     public RedissonJException(String message) {

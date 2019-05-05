@@ -1,12 +1,10 @@
-package net.noboard.redissonJ.redissonvisitcontroller;
+package net.noboard.redissonJ;
 
 import com.sun.deploy.util.StringUtils;
-import org.omg.CORBA.CODESET_INCOMPATIBLE;
 import org.redisson.api.*;
 import org.redisson.client.codec.Codec;
 import org.redisson.config.Config;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;

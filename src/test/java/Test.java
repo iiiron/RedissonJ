@@ -1,4 +1,4 @@
-import net.noboard.redissonJ.redissonvisitcontroller.RedissonJClient;
+import net.noboard.redissonJ.RedissonJClient;
 
 public class Test {
     public static void main(String[] a) {
