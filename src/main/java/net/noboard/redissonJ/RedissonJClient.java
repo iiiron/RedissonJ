@@ -1,6 +1,5 @@
 package net.noboard.redissonJ;
 
-import com.sun.deploy.util.StringUtils;
 import org.redisson.api.*;
 import org.redisson.client.codec.Codec;
 import org.redisson.config.Config;
@@ -27,12 +26,21 @@ public class RedissonJClient implements RedissonClient {
             return this.projectName + ":o:o:" + key;
         } else if (Pattern.matches("^:::.+$", key)) {
             List<String> list = Arrays.asList(key.split(":"));
-            return "forAll:" + StringUtils.join(list.subList(3, list.size()), ":");
+            return "forAll:" + join(list.subList(3, list.size()));
         } else if (Pattern.matches("^:[op]:[op]:.+$", key)) {
             return this.projectName + key;
         } else {
             throw new RedissonJException("Key格式不符合RedissonJ规格：" + key);
         }
+    }
+
+    private String join(List<String> arg) {
+        StringBuilder stringBuilder = new StringBuilder();
+        for (String s : arg) {
+            stringBuilder.append(s).append(":");
+        }
+        stringBuilder.deleteCharAt(stringBuilder.length() - 1);
+        return stringBuilder.toString();
     }
 
     public <K, V> RStream<K, V> getStream(String s) {
