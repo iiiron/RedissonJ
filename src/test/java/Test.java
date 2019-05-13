@@ -1,10 +1,10 @@
-import net.noboard.redissonJ.RedissonJClient;
 import net.noboard.redissonJ.RedissonJClientProxy;
 import org.redisson.api.*;
 import org.redisson.client.codec.Codec;
 import org.redisson.config.Config;
 
 import java.util.Date;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 public class Test {
@@ -332,7 +332,39 @@ public class Test {
             }
 
             public RBuckets getBuckets() {
-                return null;
+                return new RBuckets() {
+                    public <V> Map<String, V> get(String... strings) {
+                        return null;
+                    }
+
+                    public boolean trySet(Map<String, ?> map) {
+                        return false;
+                    }
+
+                    public void set(Map<String, ?> map) {
+
+                    }
+
+                    public long delete(String... strings) {
+                        return 0;
+                    }
+
+                    public <V> RFuture<Map<String, V>> getAsync(String... strings) {
+                        return null;
+                    }
+
+                    public RFuture<Boolean> trySetAsync(Map<String, ?> map) {
+                        return null;
+                    }
+
+                    public RFuture<Void> setAsync(Map<String, ?> map) {
+                        return null;
+                    }
+
+                    public RFuture<Long> deleteAsync(String... strings) {
+                        return null;
+                    }
+                };
             }
 
             public RBuckets getBuckets(Codec codec) {
@@ -684,5 +716,10 @@ public class Test {
             }
         },"TEST");
         redissonClient.getBucket(":AAA:p:p:User:123:141").get();
+        redissonClient.getBucket("stadu1231").get();
+        redissonClient.getBucket(":::stadu1231").get();
+        redissonClient.getBucket(":o:p:hello").get();
+        redissonClient.getBucket(":a:p:hello").get();
+        redissonClient.getBuckets().get("as");
     }
 }

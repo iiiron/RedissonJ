@@ -22,12 +22,13 @@ public class RedissonJClientProxy implements InvocationHandler {
     }
 
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-        String key = null;
-        if (args[0] instanceof String) {
+        if (args != null && args.length > 0 && args[0] instanceof String) {
             args[0] = makeKey((String) args[0]);
-            key = (String) args[0];
+            return new RedissonJProxy().bind(method.invoke(this.object, args), (String) args[0], projectName);
+        } else {
+            return new RedissonJProxy().bind(method.invoke(this.object), null, projectName);
         }
-        return new RedissonJProxy().bind(method.invoke(this.object, args),key,projectName);
+
     }
 
     private String makeKey(String key) {
@@ -35,7 +36,7 @@ public class RedissonJClientProxy implements InvocationHandler {
          * 最前字符不是“:”，此时判定key不包含权限控制信息，使用默认配置
          * 默认配置[projectName:o:o:key]
          */
-        if (Pattern.matches("^[^:\b\\s]+?:.+$", key)) {
+        if (Pattern.matches("^[^:].*$", key)) {
             return this.projectName + ":o:o:" + key;
         } else if (Pattern.matches("^:::.+$", key)) {
             List<String> list = Arrays.asList(key.split(":"));
@@ -43,7 +44,7 @@ public class RedissonJClientProxy implements InvocationHandler {
         } else if (Pattern.matches("^:[op]:[op]:.+$", key)) {
             return this.projectName + key;
         } else if (Pattern.matches("^:[^:]+?:[op]:[op]:.+$", key)) {
-            return key;
+            return key.substring(1);
         } else {
             throw new RedissonJException("Key格式不符合RedissonJ规格：" + key);
         }
