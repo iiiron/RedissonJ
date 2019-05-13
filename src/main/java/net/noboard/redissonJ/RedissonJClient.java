@@ -21,7 +21,10 @@ public class RedissonJClient implements RedissonClient {
     }
 
     private String makeKey(String key) {
-        // 最前字符不是“:”，此时判定key不包含权限控制信息，使用默认配置
+        /**
+         * 最前字符不是“:”，此时判定key不包含权限控制信息，使用默认配置
+         * 默认配置[projectName:o:o:key]
+         */
         if (Pattern.matches("^[^:\b\\s]+?:.+$", key)) {
             return this.projectName + ":o:o:" + key;
         } else if (Pattern.matches("^:::.+$", key)) {
@@ -29,6 +32,8 @@ public class RedissonJClient implements RedissonClient {
             return "forAll:" + join(list.subList(3, list.size()));
         } else if (Pattern.matches("^:[op]:[op]:.+$", key)) {
             return this.projectName + key;
+        } else if (Pattern.matches("^:[^:]+?:[op]:[op]:.+$", key)) {
+          return key;
         } else {
             throw new RedissonJException("Key格式不符合RedissonJ规格：" + key);
         }
@@ -92,7 +97,7 @@ public class RedissonJClient implements RedissonClient {
     }
 
     public <V> RBucket<V> getBucket(String s) {
-        return redissonClient.getBucket(makeKey(s));
+        return (RBucket<V>) new RedissonJProxy().bind(redissonClient.getBucket(makeKey(s)),makeKey(s),projectName);
     }
 
     public <V> RBucket<V> getBucket(String s, Codec codec) {
