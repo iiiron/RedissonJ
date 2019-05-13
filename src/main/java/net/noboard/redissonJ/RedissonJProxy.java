@@ -55,11 +55,14 @@ public class RedissonJProxy implements InvocationHandler {
         } else {
             if (Pattern.matches("(set)|(add)|(remove)|(delete)", method.getName().toLowerCase()) && !canWrite) {
                 logger.error("方法 " + method.getDeclaringClass() + "." + method.getName() + " ，使用 key（" + key + "）写入了不可写数据");
-            }
-            if (Pattern.matches("(get)|(sub)|(read)|(size)", method.getName().toLowerCase()) && !canRead) {
+                throw new  RedissonJException("方法 " + method.getDeclaringClass() + "." + method.getName() + " ，使用 key（" + key + "）写入了不可写数据");
+            } else if  (Pattern.matches("(get)|(sub)|(read)|(size)", method.getName().toLowerCase()) && !canRead) {
                 logger.error("方法 " + method.getDeclaringClass() + "." + method.getName() + " ，使用 key（" + key + "）读取了不可读数据");
+                throw new  RedissonJException("方法 " + method.getDeclaringClass() + "." + method.getName() + " ，使用 key（" + key + "）写入了不可写数据");
+            } else {
+                return method.invoke(this.object, args);
             }
         }
-        return method.invoke(this.object, args);
+        return null;
     }
 }
