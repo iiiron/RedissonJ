@@ -1,4 +1,5 @@
 import net.noboard.redissonJ.RedissonJClient;
+import net.noboard.redissonJ.RedissonJClientProxy;
 import org.redisson.api.*;
 import org.redisson.client.codec.Codec;
 import org.redisson.config.Config;
@@ -8,7 +9,8 @@ import java.util.concurrent.TimeUnit;
 
 public class Test {
     public static void main(String[] a) {
-        RedissonJClient redissonJClient = new RedissonJClient(new RedissonClient() {
+
+        RedissonClient redissonClient = new RedissonJClientProxy().bind(new RedissonClient() {
             public <K, V> RStream<K, V> getStream(String s) {
                 return null;
             }
@@ -680,7 +682,7 @@ public class Test {
             public boolean isShuttingDown() {
                 return false;
             }
-        }, "Test");
-        redissonJClient.getBucket(":AAA:p:p:User:123:141").get();
+        },"TEST");
+        redissonClient.getBucket(":AAA:p:p:User:123:141").get();
     }
 }
