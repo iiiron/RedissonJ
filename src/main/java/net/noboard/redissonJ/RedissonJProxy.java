@@ -24,7 +24,7 @@ public class RedissonJProxy implements InvocationHandler {
     public Object bind(Object object, String key, String projectName) {
         this.key = key;
         this.object = object;
-        logger.info(key);
+//        logger.info(key);
         if (key != null) {
             String[] strings = key.split(":");
             canRead = false;

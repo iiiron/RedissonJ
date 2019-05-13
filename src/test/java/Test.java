@@ -719,7 +719,7 @@ public class Test {
         redissonClient.getBucket("stadu1231").get();
         redissonClient.getBucket(":::stadu1231").get();
         redissonClient.getBucket(":o:p:hello").get();
-        redissonClient.getBucket(":a:p:hello").get();
+        redissonClient.getBucket(":p:p:hello").get();
         redissonClient.getBuckets().get("as");
     }
 }
